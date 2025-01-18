@@ -30,4 +30,4 @@ public:
 private:
     Vector2 size;
     Vector2 position;
-}
+};

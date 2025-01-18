@@ -33,12 +33,12 @@ int main(int argc, char* argv) {
 		std::lock_guard<std::mutex> lock(g_mutex);
 
 		if (progress_1 >= 0 && progress_2 >= 0) {
-			res.set_content("-1","text/plain");
+			res.set_content("-1", "text/plain");
 			return;
 		}
 
-		res.set_content(progress_1==-1?"1":"2", "text/plain");
-		progress_1 == 0 ? progress_1 = 0 : progress_2 = 0;
+		res.set_content(progress_1 == -1 ? "1" : "2", "text/plain");
+		progress_1 == -1 ? progress_1 = 0 : progress_2 = 0;
 
 		});
 
