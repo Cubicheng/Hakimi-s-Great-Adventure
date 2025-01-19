@@ -146,11 +146,12 @@ void login_to_server(HWND hwnd) {
 
 	std::thread([&] {
 		while (true) {
+			// 发送进度到服务器
 			using namespace std::chrono;
 			std::string route = (id_player == 1) ? "/update_1" : "/update_2";
 			std::string body = std::to_string((id_player == 1) ? progress_1 : progress_2);
 			httplib::Result result = client->Post(route, body, "text/plain");
-
+			// 接收进度
 			if (result && result->status == 200) {
 				int progress = std::stoi(result->body);
 				if (id_player == 1) {
@@ -194,6 +195,9 @@ int main(int argc, char** argv) {
 	timer_countdown.set_one_shot(false);
 	timer_countdown.set_wait_time(1.0f);
 	timer_countdown.set_on_timeout([&] {
+		if (val_countdown < -1) {
+			return;
+		}
 		val_countdown--;
 		switch (val_countdown) {
 		case 3: {
@@ -226,6 +230,9 @@ int main(int argc, char** argv) {
 	BeginBatchDraw();
 
 	while (true) {
+		steady_clock::time_point frame_start = steady_clock::now();
+		duration<float> delta = frame_start - last_tick;
+
 		while (peekmessage(&msg)) {
 			if (stage != Stage::Racing) {
 				continue;
@@ -268,9 +275,6 @@ int main(int argc, char** argv) {
 				}
 			}
 		}
-
-		steady_clock::time_point frame_start = steady_clock::now();
-		duration<float> delta = frame_start - last_tick;
 
 		if (stage == Stage::Waiting) {
 			if (progress_1 >= 0 && progress_2 >= 0) {
