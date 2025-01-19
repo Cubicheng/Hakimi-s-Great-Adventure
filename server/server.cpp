@@ -58,6 +58,9 @@ int main(int argc, char* argv) {
 		res.set_content(std::to_string(progress_1), "text/plain");
 		});
 
+
+	std::cout << "Server is running on port 25565" << std::endl;
+
     server.listen("0.0.0.0", 25565);
 
 	return 0;
