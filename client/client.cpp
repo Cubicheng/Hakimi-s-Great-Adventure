@@ -101,6 +101,7 @@ void load_resources(HWND hwnd) {
 	ut::load_audio(_T("resources/ui_2.mp3"), _T("ui_2"));
 	ut::load_audio(_T("resources/ui_3.mp3"), _T("ui_3"));
 	ut::load_audio(_T("resources/ui_fight.mp3"), _T("ui_fight"));
+	ut::load_audio(_T("resources/loss.mp3"), _T("loss"));
 
 	std::ifstream file("config.cfg");
 
@@ -286,16 +287,28 @@ int main(int argc, char** argv) {
 				timer_countdown.on_update(delta.count());
 			}
 
-			if (id_player == 1 && progress_1 >= num_total_char) {
+			if (progress_1 >= num_total_char) {
 				ut::stop_audio(_T("bgm"));
-				ut::play_audio(_T("1p_win"));
-				MessageBox(hwnd, _T("1P win"), _T("Game Over"), MB_OK | MB_ICONERROR);
+				if (id_player == 1) {
+					ut::play_audio(_T("1p_win"));
+					MessageBox(hwnd, _T("1P win"), _T("Game Over"), MB_OK);
+				}
+				else {
+					ut::play_audio(_T("loss"));
+					MessageBox(hwnd, _T("1P win"), _T("Game Over"), MB_OK);
+				}
 				exit(0);
 			}
-			else if (id_player == 2 && progress_2 >= num_total_char) {
+			else if (progress_2 >= num_total_char) {
 				ut::stop_audio(_T("bgm"));
-				ut::play_audio(_T("2p_win"));
-				MessageBox(hwnd, _T("2P win"), _T("Game Over"), MB_OK | MB_ICONERROR);
+				if (id_player == 2) {
+					ut::play_audio(_T("2p_win"));
+					MessageBox(hwnd, _T("2P win"), _T("Game Over"), MB_OK);
+				}
+				else {
+					ut::play_audio(_T("loss"));
+					MessageBox(hwnd, _T("2P win"), _T("Game Over"), MB_OK);
+				}
 				exit(0);
 			}
 		}
@@ -400,7 +413,6 @@ int main(int argc, char** argv) {
 		if (sleep_duration > nanoseconds(0)) {
 			std::this_thread::sleep_for(sleep_duration);
 		}
-
 	}
 
 	return 0;
